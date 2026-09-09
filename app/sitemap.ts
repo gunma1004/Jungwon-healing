@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // 🌐 실제 서비스 도메인 주소로 통일
-  const baseUrl = 'https://massage-moa.vercel.app';
+  const baseUrl = 'https://Jungwon-healing.netlify.app';
 
   // 1. 메인 홈 페이지
   const mainRoute: MetadataRoute.Sitemap = [
@@ -135,14 +135,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { region: 'cheongju', district: '청원구' },
   ];
 
-  const regionRoutes: MetadataRoute.Sitemap = regionList.map((item) => {
-    return {
-      url: `${baseUrl}/${item.region}/${encodeURIComponent(item.district)}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    };
-  });
+  // A. 기본 지역별 상세 페이지 라우트
+  const regionRoutes: MetadataRoute.Sitemap = regionList.map((item) => ({
+    url: `${baseUrl}/${item.region}/${encodeURIComponent(item.district)}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.9,
+  }));
 
-  return [...mainRoute, ...categoryRoutes, ...shopRoutes, ...regionRoutes];
+  // B. 💡 신규 추가: 출장 힐링 마사지 전용 페이지 라우트 (/healing/...)
+  const healingRegionRoutes: MetadataRoute.Sitemap = regionList.map((item) => ({
+    url: `${baseUrl}/healing/${item.region}/${encodeURIComponent(item.district)}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.9,
+  }));
+
+  return [
+    ...mainRoute,
+    ...categoryRoutes,
+    ...shopRoutes,
+    ...regionRoutes,
+    ...healingRegionRoutes, // 사이트맵에 힐링 키워드 페이지들 동적 추가
+  ];
 }

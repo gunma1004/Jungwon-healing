@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "코스별 가격 안내 | 마사지모아 - 100% 후불제 투명한 요금 가이드",
-  description: "타이, 아로마, 감성 스웨디시, 한국인 VIP 코스 등 마사지모아 제휴업체의 투명한 가격과 프로그램을 확인하세요. 선입금 없는 100% 안심 후불제.",
+  title: "코스별 가격 안내 | 휴식의정원 - 100% 후불제 투명한 요금 가이드",
+  description: "타이, 아로마, 감성 스웨디시, 한국인 VIP 코스 등 휴식의정원 제휴업체의 투명한 가격과 프로그램을 확인하세요. 선입금 없는 100% 안심 후불제.",
   openGraph: {
-    title: "코스별 가격 안내 | 마사지모아",
-    description: "마사지모아의 투명하고 정직한 코스별 요금 및 프로그램 안내",
-    url: "https://massagemoa.com/prices",
-    siteName: "마사지모아",
+    title: "코스별 가격 안내 | 휴식의정원",
+    description: "휴식의정원의 투명하고 정직한 코스별 요금 및 프로그램 안내",
+    url: "https://Jungwon-healing.netlify.app/prices",
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },
@@ -55,7 +55,7 @@ export default function PricesPage() {
             투명한 코스별 가격 안내
           </h1>
           <p className="text-xs md:text-sm text-gray-400">
-            마사지모아는 100% 후불제 안심 예약 시스템으로 운영됩니다.
+            휴식의정원은 100% 후불제 안심 예약 시스템으로 운영됩니다.
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export default function PricesPage() {
               🛡️ 100% 후불 안심 보장제
             </span>
             <p className="text-[11px] md:text-xs text-gray-300">
-              마사지모아 모든 제휴업체는 관리사 도착 전 <span className="text-amber-400 font-bold">선입금 및 예약금을 절대 요구하지 않습니다.</span>
+              휴식의정원 모든 제휴업체는 관리사 도착 전 <span className="text-amber-400 font-bold">선입금 및 예약금을 절대 요구하지 않습니다.</span>
             </p>
           </div>
         </div>

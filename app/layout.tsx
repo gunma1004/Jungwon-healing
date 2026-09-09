@@ -3,8 +3,8 @@ import "./globals.css";
 import NavigationHeader from "./NavigationHeader";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://massage-moa.vercel.app"),
-  title: "마사지모아 | 전국 24시 방문 홈케어 & 프리미엄 힐링 테라피 안내",
+  metadataBase: new URL("https://Jungwon-healing.netlify.app"),
+  title: "휴식의정원 | 전국 24시 방문 홈케어 & 프리미엄 힐링 테라피 안내",
   // 🎯 네이버 권장 80자 이내 최적화 (공백 포함 62자)
   description: "전국 24시 홈타이·스웨디시·아로마 방문 홈케어. 선입금 없는 100% 후불제 안심 예약.",
   verification: {
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "마사지모아 | 전국 24시 방문 홈케어 & 마사지 추천",
+    title: "휴식의정원 | 전국 24시 방문 홈케어 & 마사지 추천",
     // 🎯 80자 이내 최적화 (공백 포함 58자)
     description: "선입금 없는 100% 후불 안심 케어! 전국 주요 지역 빠른 방문 바디케어 안내.",
-    url: "https://massage-moa.vercel.app",
-    siteName: "마사지모아",
+    url: "https://Jungwon-healing.netlify.app",
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },

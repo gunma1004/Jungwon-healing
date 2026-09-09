@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "맛집·숙소 가이드 | 마사지모아 - 전국 힐링 공간 & 핫플레이스 안내",
-  description: "서울·경기·인천·부산·대구·대전 등 전국 주요 거점 지역의 검증된 맛집과 편안한 숙소·휴식 공간 정보를 마사지모아에서 확인하세요.",
+  title: "맛집·숙소 가이드 | 휴식의정원 - 전국 힐링 공간 & 핫플레이스 안내",
+  description: "서울·경기·인천·부산·대구·대전 등 전국 주요 거점 지역의 검증된 맛집과 편안한 숙소·휴식 공간 정보를 휴식의정원에서 확인하세요.",
   openGraph: {
-    title: "맛집·숙소 가이드 | 마사지모아",
+    title: "맛집·숙소 가이드 | 휴식의정원",
     description: "전국 주요 지역 검증된 맛집 및 휴식 공간 안내",
-    url: "https://massagemoa.com/places",
-    siteName: "마사지모아",
+    url: "https://Jungwon-healing.netlify.app/places",
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },
@@ -43,7 +43,7 @@ export default function PlacesPage() {
             내 주변 맛집 & 편안한 휴식 공간
           </h1>
           <p className="text-xs md:text-sm text-gray-400">
-            마사지모아가 추천하는 지역별 검증된 핫플레이스와 편안한 쉼터 가이드
+            휴식의정원이 추천하는 지역별 검증된 핫플레이스와 편안한 쉼터 가이드
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function PlacesPage() {
             href="/"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-extrabold text-xs px-5 py-3 rounded-xl shadow-lg hover:from-amber-400 hover:to-yellow-300 transition-all"
           >
-            <span>🏠</span> 마사지모아 홈으로 돌아가기
+            <span>🏠</span> 휴식의정원 홈으로 돌아가기
           </Link>
         </div>
 

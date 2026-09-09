@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "서비스 안내 | 마사지모아 - 전국 방문 홈케어 & 힐링 테라피 코스",
-  description: "타이, 아로마 오일 케어, VIP 스웨디시, 한국인 베테랑 힐러 코스 등 마사지모아의 고품격 피로회복 힐링 프로그램을 확인하세요.",
+  title: "서비스 안내 | 휴식의정원 - 전국 방문 홈케어 & 힐링 테라피 코스",
+  description: "타이, 아로마 오일 케어, VIP 스웨디시, 한국인 베테랑 힐러 코스 등 휴식의정원의 고품격 피로회복 힐링 프로그램을 확인하세요.",
   openGraph: {
-    title: "서비스 안내 | 마사지모아",
-    description: "마사지모아가 제공하는 맞춤형 방문 테라피 & 프리미엄 바디케어 프로그램 안내",
-    url: "https://massagemoa.com/services",
-    siteName: "마사지모아",
+    title: "서비스 안내 | 휴식의정원",
+    description: "휴식의정원이 제공하는 맞춤형 방문 테라피 & 프리미엄 바디케어 프로그램 안내",
+    url: "https://Jungwon-healing.netlify.app/services",
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },
@@ -52,7 +52,7 @@ export default function ServicesPage() {
             PREMIUM CARE SERVICE
           </span>
           <h1 className="text-3xl md:text-4xl font-black text-white">
-            마사지모아 코스별 서비스 안내
+            휴식의정원 코스별 서비스 안내
           </h1>
           <p className="text-xs md:text-sm text-gray-400">
             고객님의 컨디션과 취향에 맞춘 전국 24시 최상의 힐링 프로그램
@@ -65,7 +65,7 @@ export default function ServicesPage() {
             ✨ 100% 후불제 & 철저한 위생 관리 시스템
           </p>
           <p className="text-xs text-gray-300 leading-relaxed max-w-xl mx-auto">
-            마사지모아의 모든 제휴점은 최고급 천연 오일과 소독된 케어 용품을 사용하며, 관리사 도착 전 선입금을 절대 요구하지 않습니다.
+            휴식의정원의 모든 제휴점은 최고급 천연 오일과 소독된 케어 용품을 사용하며, 관리사 도착 전 선입금을 절대 요구하지 않습니다.
           </p>
         </div>
 

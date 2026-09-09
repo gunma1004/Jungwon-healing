@@ -7,7 +7,7 @@ interface PageProps {
   }>;
 }
 
-// 🎯 Cloudflare 정적 빌드 필수 함수 (1~5번 상세 페이지 사전 생성)
+// 🎯 Cloudflare/Netlify 정적 빌드 필수 함수 (1~5번 상세 페이지 사전 생성)
 export async function generateStaticParams() {
   return [
     { id: "1" },
@@ -33,7 +33,7 @@ const shopData: Record<
 > = {
   "1": {
     name: "🔥 한국미녀홈타이",
-    phone: "0507-1280-3299",
+    phone: "0507-1280-3303",
     location: "전국 주요 지역 25분 내 신속 방문",
     badge: "실시간 만족도 1위",
     image: "/shop1.jpg",
@@ -77,7 +77,7 @@ const shopData: Record<
     features: ["선입금 0원 100% 후불제", "평균 25분 방문 보장", "개인정보 완벽 보호"],
   },
   "4": {
-    name: "🌟 20대프리미엄홈케어",
+    name: "🌟20대퀸즈홈테라피",
     phone: "0507-1280-3222",
     location: "전국 주요 지역 24시 방문",
     badge: "젊은 감성 베테랑",
@@ -115,13 +115,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const shop = shopData[id] || shopData["1"];
 
   return {
-    title: `${shop.name} | 마사지모아 24시 제휴점 안내`,
+    title: `${shop.name} | 휴식의정원 24시 제휴점 안내`,
     description: shop.desc,
     openGraph: {
-      title: `${shop.name} | 마사지모아 제휴샵 안내`,
+      title: `${shop.name} | 휴식의정원 제휴샵 안내`,
       description: shop.desc,
-      url: `https://massage-moa.vercel.app/shop/${id}`,
-      siteName: "마사지모아",
+      url: `https://Jungwon-healing.netlify.app/shop/${id}`,
+      siteName: "휴식의정원",
       locale: "ko_KR",
       type: "website",
     },
@@ -141,12 +141,12 @@ export default async function ShopDetailPage({ params }: PageProps) {
           <Link href="/" className="flex items-center gap-3 group">
             <img
               src="/logo.png"
-              alt="마사지모아 로고"
+              alt="휴식의정원 로고"
               className="w-10 h-10 rounded-xl object-cover border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.4)] group-hover:scale-105 transition-transform"
             />
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-wider bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
-                마사지모아
+                휴식의정원
               </span>
               <span className="text-[10px] text-gray-400 tracking-tighter">PREMIUM SHOP DETAIL</span>
             </div>
@@ -239,7 +239,7 @@ export default async function ShopDetailPage({ params }: PageProps) {
           </h3>
           <ul className="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
             <li>
-              마사지모아 제휴업체는 <strong>100% 후불제</strong>로 운영됩니다. 도착 전 선입금을 절대 요구하지 않습니다.
+              휴식의정원 제휴업체는 <strong>100% 후불제</strong>로 운영됩니다. 도착 전 선입금을 절대 요구하지 않습니다.
             </li>
             <li>희망하시는 시간 20~30분 전에 미리 예약 문의 주시면 더욱 신속한 방문 서비스가 가능합니다.</li>
           </ul>
@@ -256,7 +256,7 @@ export default async function ShopDetailPage({ params }: PageProps) {
             <span className="text-lg">📞</span> 전화로 즉시예약
           </a>
           <a
-            href={`sms:${shop.phone}?body=${encodeURIComponent(`${shop.name} 문의드립니다. (마사지모아 보고 연락드렸어요)`)}`}
+            href={`sms:${shop.phone}?body=${encodeURIComponent(`${shop.name} 문의드립니다. (휴식의정원 보고 연락드렸어요)`)}`}
             className="flex items-center justify-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white font-black py-3.5 rounded-2xl text-xs md:text-sm border border-white/10 hover:border-amber-500/40 transition-transform active:scale-95"
           >
             <span className="text-lg">💬</span> 간편 문자상담

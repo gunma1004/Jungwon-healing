@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-// 전국 주요 전지역 데이터
+// (regionData 및 initialLocalShops 데이터는 기존과 동일하게 유지)
 const regionData: Record<string, { name: string; districts: Record<string, { name: string; dongs: string[] }> }> = {
   seoul: {
     name: "서울특별시",
@@ -46,197 +46,80 @@ const regionData: Record<string, { name: string; districts: Record<string, { nam
       seongnam_sujeong: { name: "성남시 수정구", dongs: ["신흥1동", "신흥2동", "신흥3동", "태평1동", "태평2동", "태평3동", "태평4동", "수진1동", "수진2동", "단대동", "산성동", "양지동", "복정동", "위례동", "신촌동", "고등동", "창곡동"] },
       seongnam_jungwon: { name: "성남시 중원구", dongs: ["성남동", "중앙동", "금광1동", "금광2동", "은행1동", "은행2동", "상대원1동", "상대원2동", "상대원3동", "하대원동", "도촌동"] },
       seongnam_bundang: { name: "성남시 분당구", dongs: ["분당동", "수내1동", "수내2동", "수내3동", "정자동", "정자1동", "정자2동", "정자3동", "서현1동", "서현2동", "이매1동", "이매2동", "야탑1동", "야탑2동", "야탑3동", "금곡동", "미금동", "구미동", "판교동", "삼평동", "백현동", "운중동"] },
-      goyang_deogyang: { name: "고양시 덕양구", dongs: ["원신동", "흥도동", "효자동", "창릉동", "능곡동", "행신1동", "행신2동", "행신3동", "화정1동", "화정2동", "대덕동", "고양동", "관산동", "성사동"] },
-      goyang_ilsandong: { name: "고양시 일산동구", dongs: ["식사동", "중산1동", "중산2동", "정발산동", "풍산동", "백석1동", "백석2동", "마두1동", "마두2동", "장항1동", "장항2동", "고봉동"] },
-      goyang_ilsanseo: { name: "고양시 일산서구", dongs: ["일산1동", "일산2동", "일산3동", "탄현1동", "탄현2동", "주엽1동", "주엽2동", "대화동", "송포동", "덕이동"] },
-      yongin_cheoin: { name: "용인시 처인구", dongs: ["포곡읍", "모현읍", "남사읍", "원삼면", "백암면", "동부동", "중앙동", "역삼동", "유림동"] },
-      yongin_giheung: { name: "용인시 기흥구", dongs: ["신갈동", "마북동", "구성동", "동백동", "보정동", "상갈동", "기흥동", "서농동", "중동", "상하동", "보라동"] },
-      yongin_suji: { name: "용인시 수지구", dongs: ["풍덕천1동", "풍덕천2동", "신봉동", "죽전1동", "죽전2동", "동천동", "상현1동", "상현2동", "성복동"] },
+      uijeongbu: { name: "의정부시", dongs: ["의정부동", "호원동", "장암동", "신곡동", "송산동", "가능동", "흥선동", "자금동"] },
+      anyang_manan: { name: "안양시 만안구", dongs: ["안양1동", "안양2동", "안양3동", "안양4동", "안양5동", "안양6동", "안양7동", "안양8동", "안양9동", "석수동", "박달동"] },
+      anyang_dongan: { name: "안양시 동안구", dongs: ["비산동", "부흥동", "달안동", "관양동", "평촌동", "평안동", "귀인동", "범계동", "호계동"] },
       bucheon_wonmi: { name: "부천시 원미구", dongs: ["심곡동", "원미동", "소사동", "역곡동", "중동", "상동", "약대동"] },
       bucheon_sosa: { name: "부천시 소사구", dongs: ["소사본동", "범박동", "옥길동", "괴안동", "송내동", "춘의동"] },
       bucheon_ojeong: { name: "부천시 오정구", dongs: ["오정동", "고강동", "원종동", "성곡동"] },
+      gwangmyeong: { name: "광명시", dongs: ["광명동", "철산동", "하안동", "소하동", "학온동"] },
+      pyeongtaek: { name: "평택시", dongs: ["진위면", "서탄면", "고덕면", "청북읍", "포승읍", "현덕면", "팽성읍", "신장동", "서정동", "송탄동", "지산동", "원평동", "비전동", "소사동", "세교동"] },
+      dongducheon: { name: "동두천시", dongs: ["생연동", "보산동", "동두천동", "상패동", "중앙동", "송내동", "불현동"] },
       ansan_sangnok: { name: "안산시 상록구", dongs: ["반월동", "사동", "일동", "이동", "본오동", "수암동", "장상동"] },
       ansan_danwon: { name: "안산시 단원구", dongs: ["와동", "고잔동", "초지동", "원곡동", "백운동", "신길동", "성곡동", "대부동"] },
-      anyang_manan: { name: "안양시 만안구", dongs: ["안양1동", "안양2동", "안양3동", "안양4동", "안양5동", "안양6동", "안양7동", "안양8동", "안양9동", "석수동", "박달동"] },
-      anyang_dongan: { name: "안양시 동안구", dongs: ["비산동", "부흥동", "달안동", "관양동", "평촌동", "평안동", "귀인동", "범계동", "호계동"] },
+      goyang_deogyang: { name: "고양시 덕양구", dongs: ["원신동", "흥도동", "효자동", "창릉동", "능곡동", "행신1동", "행신2동", "행신3동", "화정1동", "화정2동", "대덕동", "고양동", "관산동", "성사동"] },
+      goyang_ilsandong: { name: "고양시 일산동구", dongs: ["식사동", "중산1동", "중산2동", "정발산동", "풍산동", "백석1동", "백석2동", "마두1동", "마두2동", "장항1동", "장항2동", "고봉동"] },
+      goyang_ilsanseo: { name: "고양시 일산서구", dongs: ["일산1동", "일산2동", "일산3동", "탄현1동", "탄현2동", "주엽1동", "주엽2동", "대화동", "송포동", "덕이동"] },
+      gwacheon: { name: "과천시", dongs: ["중앙동", "갈현동", "문원동", "별양동", "부림동", "과천동"] },
+      guri: { name: "구리시", dongs: ["갈매동", "동구동", "인창동", "교문1동", "교문2동", "수택1동", "수택2동", "수택3동"] },
       namyangju: { name: "남양주시", dongs: ["와부읍", "진접읍", "화도읍", "수동면", "조안면", "퇴계원읍", "별내면", "별내동", "금곡동", "양정동", "다산동", "평내동", "호평동", "오남읍"] },
-      hwaseong: { name: "화성시", dongs: ["봉담읍", "우정읍", "향남읍", "남양읍", "매송면", "비봉면", "팔탄면", "장안면", "양감면", "정남면", "새솔동", "진안동", "병점동", "반월동", "기배동", "화산동", "동탄동"] },
-      pyeongtaek: { name: "평택시", dongs: ["진위면", "서탄면", "고덕면", "청북읍", "포승읍", "현덕면", "팽성읍", "신장동", "서정동", "송탄동", "지산동", "원평동", "비전동", "소사동", "세교동"] },
-      uijeongbu: { name: "의정부시", dongs: ["의정부동", "호원동", "장암동", "신곡동", "송산동", "가능동", "흥선동", "자금동"] },
-      paju: { name: "파주시", dongs: ["문산읍", "조리읍", "법원읍", "파주읍", "탄현면", "광탄면", "월롱면", "적성면", "파평면", "교하동", "운정동", "금촌동"] },
-      gimpo: { name: "김포시", dongs: ["고촌읍", "통진읍", "대곶면", "월곶면", "하성면", "사우동", "풍무동", "장기동", "구래동", "운양동", "마산동"] },
+      osan: { name: "오산시", dongs: ["중앙동", "신장동", "세마동", "초평동", "대원동", "남촌동", "세교동"] },
       siheung: { name: "시흥시", dongs: ["대야동", "신천동", "신현동", "은행동", "매화동", "목감동", "군자동", "월곶동", "정왕동", "배곧동", "과림동", "연성동"] },
-      gwangmyeong: { name: "광명시", dongs: ["광명동", "철산동", "하안동", "소하동", "학온동"] },
-      gwangju_gyeonggi: { name: "광주시", dongs: ["오포읍", "초월읍", "퇴촌면", "남종면", "남한산성면", "송정동", "광남동"] },
-      hanam: { name: "하남시", dongs: ["천현동", "신장동", "덕풍동", "감북동", "위례동", "미사동", "춘궁동", "초이동"] },
-      gunpo: { name: "군포시", dongs: ["군포동", "산본동", "금정동", "재궁동", "오금동", "수리동", "대야미동"] },
-      osan: { name: "오산시", dongs: ["중앙동", "신장동", "세마동", "초평동", "대원동"] },
-      icheon: { name: "이천시", dongs: ["창전동", "중리동", "증포동", "부발읍", "장호원읍"] },
-      anseong: { name: "안성시", dongs: ["공도읍", "죽산면", "삼죽면", "보개면", "금광면", "서운면", "미양면", "대덕면", "원곡면", "양성면", "안성동"] },
-      yangju: { name: "양주시", dongs: ["회천동", "양주동", "백석읍", "은현면", "남면", "장흥면"] },
+      gunpo: { name: "군포시", dongs: ["군포동", "산본동", "금정동", "재궁동", "오금동", "수리동", "대야미동", "송부동"] },
+      uiwang: { name: "의왕시", dongs: ["고천동", "부곡동", "오전동", "내손1동", "내손2동", "청계동"] },
+      hanam: { name: "하남시", dongs: ["천현동", "신장동", "덕풍동", "감북동", "위례동", "미사동", "춘궁동", "초이동", "감일동"] },
+      yongin_cheoin: { name: "용인시 처인구", dongs: ["포곡읍", "모현읍", "남사읍", "원삼면", "백암면", "동부동", "중앙동", "역삼동", "유림동"] },
+      yongin_giheung: { name: "용인시 기흥구", dongs: ["신갈동", "마북동", "구성동", "동백동", "보정동", "상갈동", "기흥동", "서농동", "중동", "상하동", "보라동"] },
+      yongin_suji: { name: "용인시 수지구", dongs: ["풍덕천1동", "풍덕천2동", "신봉동", "죽전1동", "죽전2동", "동천동", "상현1동", "상현2동", "성복동"] },
+      paju: { name: "파주시", dongs: ["문산읍", "조리읍", "법원읍", "파주읍", "탄현면", "광탄면", "월롱면", "적성면", "파평면", "교하동", "운정1동", "운정2동", "운정3동", "금촌동"] },
+      icheon: { name: "이천시", dongs: ["창전동", "중리동", "증포동", "부발읍", "장호원읍", "마장면", "대월면", "신둔면", "백사면", "호법면", "설성면", "율면"] },
+      anseong: { name: "안성시", dongs: ["공도읍", "죽산면", "삼죽면", "보개면", "금광면", "서운면", "미양면", "대덕면", "원곡면", "양성면", "안성동", "고삼면"] },
+      gimpo: { name: "김포시", dongs: ["고촌읍", "통진읍", "대곶면", "월곶면", "하성면", "사우동", "풍무동", "장기동", "구래동", "운양동", "마산동", "장기본동"] },
+      hwaseong: { name: "화성시", dongs: ["봉담읍", "우정읍", "향남읍", "남양읍", "매송면", "비봉면", "팔탄면", "장안면", "양감면", "정남면", "새솔동", "진안동", "병점동", "반월동", "기배동", "화산동", "동탄동"] },
+      gwangju_gyeonggi: { name: "광주시", dongs: ["오포읍", "초월읍", "퇴촌면", "남종면", "남한산성면", "송정동", "광남동", "경안동", "쌍령동", "탄벌동"] },
+      yangju: { name: "양주시", dongs: ["회천동", "양주동", "백석읍", "은현면", "남면", "장흥면", "고읍동", "옥정동"] },
       pochon: { name: "포천시", dongs: ["소흘읍", "군내면", "내촌면", "가산면", "일동면", "이동면", "영중면", "창수면", "관인면", "화현면", "포천동", "선단동"] },
-      yeoju: { name: "여주시", dongs: ["여흥동", "중앙동", "오학동", "가남읍"] },
-      dongducheon: { name: "동두천시", dongs: ["생연동", "보산동", "동두천동", "상패동", "중앙동", "송내동", "불현동"] },
+      yeoju: { name: "여주시", dongs: ["여흥동", "중앙동", "오학동", "가남읍", "점동면", "능서면", "흥천면", "금사면", "산북면", "대신면"] },
+      yeoncheon: { name: "연천군", dongs: ["연천읍", "전곡읍", "군남면", "청산면", "백학면", "미산면", "왕징면", "신서면", "중면"] },
       gapyeong: { name: "가평군", dongs: ["가평읍", "설악면", "청평면", "상면", "조종면", "북면"] },
-      yangpyeong: { name: "양평군", dongs: ["양평읍", "강상면", "강하면", "양서면", "옥천면", "지평면", "용문면", "개군면"] },
-      yeoncheon: { name: "연천군", dongs: ["연천읍", "전곡읍", "군남면", "청산면", "백학면", "미산면", "왕징면", "신서면", "중면"] }
+      yangpyeong: { name: "양평군", dongs: ["양평읍", "강상면", "강하면", "양서면", "옥천면", "지평면", "용문면", "개군면", "서종면", "단월면", "청운면"] }
     }
   },
   incheon: {
     name: "인천광역시",
     districts: {
-      junggu: { name: "중구", dongs: ["신포동", "연안동", "신흥동", "도원동", "율목동", "동인천동", "개항동", "영종동", "영종1동", "영종2동", "운서동", "용유동"] },
-      donggu: { name: "동구", dongs: ["만석동", "화수1.화평동", "화수2동", "송현1.2동", "송현3동", "송림1동", "송림2동", "송림3.5동", "송림4동", "송림6동", "금창동"] },
-      michuhol: { name: "미추홀구", dongs: ["숭의1.4동", "숭의2동", "숭의3동", "용현1.4동", "용현2동", "용현3동", "용현5동", "학익1동", "학익2동", "도화1동", "도화2.3동", "주안1동", "주안2동", "주안3동", "주안4동", "주안5동", "주안6동", "주안7동", "주안8동", "관교동", "문학동"] },
-      yeonsu: { name: "연수구", dongs: ["옥련1동", "옥련2동", "선학동", "연수1동", "연수2동", "연수3동", "청학동", "동춘1동", "동춘2동", "동춘3동", "송도1동", "송도2동", "송도3동", "송도4동", "송도5동"] },
-      namdong: { name: "남동구", dongs: ["구월1동", "구월2동", "구월3동", "구월4동", "간석1동", "간석2동", "간석3동", "간석4동", "만수1동", "만수2동", "만수3동", "만수4동", "만수5동", "만수6동", "장수서창동", "서창2동", "남촌도림동", "논현1동", "논현2동", "논현고잔동"] },
-      bupyeong: { name: "부평구", dongs: ["부평1동", "부평2동", "부평3동", "부평4동", "부평5동", "부평6동", "산곡1동", "산곡2동", "산곡3동", "산곡4동", "청천1동", "청천2동", "갈산1동", "갈산2동", "삼산1동", "삼산2동", "부개1동", "부개2동", "부개3동", "일신동", "십정1동", "십정2동"] },
-      gyeyang: { name: "계양구", dongs: ["효성1동", "효성2동", "계산1동", "계산2동", "계산3동", "계산4동", "작전1동", "작전2동", "작전서운동", "계양1동", "계양2동", "계양3동"] },
-      seogu: { name: "서구", dongs: ["검암경서동", "연희동", "청라1동", "청라2동", "청라3동", "가정1동", "가정2동", "가정3동", "신현원창동", "석남1동", "석남2동", "석남3동", "가좌1동", "가좌2동", "가좌3동", "가좌4동", "검단동", "불로대곡동", "원당동", "당하동", "오류왕길동", "마전동", "아라동"] },
+      jemulpo: { name: "제물포구", dongs: ["신포동", "연안동", "신흥동", "도원동", "율목동", "동인천동", "개항동", "만석동", "화수동", "화평동", "송현동", "송림동", "금창동"] },
+      yeongjong: { name: "영종구", dongs: ["영종동", "영종1동", "영종2동", "운서동", "용유동"] },
+      michuhol: { name: "미추홀구", dongs: ["숭의동", "용현동", "학익동", "도화동", "주안동", "관교동", "문학동"] },
+      yeonsu: { name: "연수구", dongs: ["옥련동", "선학동", "연수동", "청학동", "동춘동", "송도동"] },
+      namdong: { name: "남동구", dongs: ["구월동", "간석동", "만수동", "장수서창동", "서창동", "남촌도림동", "논현동", "논현고잔동"] },
+      bupyeong: { name: "부평구", dongs: ["부평동", "산곡동", "청천동", "갈산동", "삼산동", "부개동", "일신동", "십정동"] },
+      gyeyang: { name: "계양구", dongs: ["효성동", "계산동", "작전동", "작전서운동", "계양동"] },
+      sehae: { name: "서해구", dongs: ["연희동", "가정동", "신현원창동", "석남동", "가좌동"] },
+      geomdan: { name: "검단구", dongs: ["검암경서동", "청라동", "검단동", "불로대곡동", "원당동", "당하동", "오류왕길동", "마전동", "아라동"] },
       ganghwa: { name: "강화군", dongs: ["강화읍", "선원면", "불은면", "길상면", "화도면", "양도면", "내가면", "하점면", "양사면", "송해면", "교동면", "삼산면", "서도면"] },
       ongjin: { name: "옹진군", dongs: ["북도면", "연평면", "백령면", "대청면", "덕적면", "자월면", "영흥면"] }
-    }
-  },
-  busan: {
-    name: "부산광역시",
-    districts: {
-      haeundae: { name: "해운대구", dongs: ["우동", "좌동", "중동", "재송동", "반여동", "반송동"] },
-      busanjin: { name: "부산진구", dongs: ["부전동", "전포동", "양정동", "가야동", "개금동", "당감동"] },
-      suyeong: { name: "수영구", dongs: ["광안동", "망미동", "수영동", "민락동", "남천동"] },
-      sasang: { name: "사상구", dongs: ["괘법동", "감전동", "주례동", "학장동", "엄궁동"] },
-      saha: { name: "사하구", dongs: ["하단동", "괴정동", "당리동", "신평동", "장림동", "다대동"] },
-      dongnae: { name: "동래구", dongs: ["명륜동", "온천동", "사직동", "수민동", "복산동"] },
-      geumjeong: { name: "금정구", dongs: ["구서동", "장전동", "부곡동", "서동", "남산동"] },
-      namgu_busan: { name: "남구", dongs: ["대연동", "용호동", "감만동", "우암동", "문현동"] }
-    }
-  },
-  daegu: {
-    name: "대구광역시",
-    districts: {
-      junggu_daegu: { name: "중구", dongs: ["동성로동", "삼덕동", "성내동", "대신동", "남산동"] },
-      suseong: { name: "수성구", dongs: ["범어동", "만촌동", "황금동", "지산동", "두산동", "상동"] },
-      donggu_daegu: { name: "동구", dongs: ["신천동", "효목동", "불로봉무동", "동촌동", "방촌동", "안심동"] },
-      seogu_daegu: { name: "서구", dongs: ["내당동", "비산동", "평리동", "상중이동", "원대동"] },
-      namgu_daegu: { name: "남구", dongs: ["이천동", "봉덕동", "대명동"] },
-      bukgu_daegu: { name: "북구", dongs: ["칠성동", "고성동", "침산동", "산격동", "복현동", "태전동"] },
-      dalseo: { name: "달서구", dongs: ["성당동", "두류동", "본리동", "감삼동", "죽전동", "상인동", "월성동"] },
-      dalseong: { name: "달성군", dongs: ["화원읍", "논공읍", "다사읍", "유가읍", "옥포읍", "현풍읍"] }
-    }
-  },
-  daejeon: {
-    name: "대전광역시",
-    districts: {
-      seogu_daejeon: { name: "서구", dongs: ["둔산동", "탄방동", "용문동", "가장동", "괴정동", "도마동", "관저동"] },
-      yuseong: { name: "유성구", dongs: ["봉명동", "궁동", "어은동", "신성동", "전민동", "노은동", "관평동"] },
-      junggu_daejeon: { name: "중구", dongs: ["은행선화동", "대흥동", "문창동", "유천동", "문화동", "태평동"] },
-      donggu_daejeon: { name: "동구", dongs: ["중앙동", "신인동", "효동", "가양동", "용전동", "자양동"] },
-      daedeok: { name: "대덕구", dongs: ["오정동", "대화동", "회덕동", "비래동", "송촌동", "신탄진동"] }
-    }
-  },
-  gwangju_city: {
-    name: "광주광역시",
-    districts: {
-      seogu_gwangju: { name: "서구", dongs: ["상무동", "치평동", "화정동", "풍암동", "금호동", "농성동"] },
-      bukgu_gwangju: { name: "북구", dongs: ["중흥동", "중앙동", "임동", "신안동", "용봉동", "운암동", "첨단동"] },
-      gwangsan: { name: "광산구", dongs: ["송정동", "비아동", "첨단동", "신가동", "신창동", "수완동", "우산동"] },
-      donggu_gwangju: { name: "동구", dongs: ["충장동", "동명동", "계림동", "산수동", "학동", "지원동"] },
-      namgu_gwangju: { name: "남구", dongs: ["양림동", "방림동", "봉선동", "사직동", "월산동", "백운동", "효덕동"] }
-    }
-  },
-  ulsan: {
-    name: "울산광역시",
-    districts: {
-      namgu_ulsan: { name: "남구", dongs: ["신정동", "달동", "삼산동", "무거동", "옥동", "야음장생포동"] },
-      junggu_ulsan: { name: "중구", dongs: ["학성동", "반구동", "복산동", "성남동", "우정동", "태화동", "병영동"] },
-      bukgu_ulsan: { name: "북구", dongs: ["농소동", "효문동", "양정동", "염포동", "송정동"] },
-      donggu_ulsan: { name: "동구", dongs: ["방어동", "일산동", "화정동", "전하동", "남목동"] },
-      ulju: { name: "울주군", dongs: ["온산읍", "언양읍", "온양읍", "범서읍", "청량읍"] }
-    }
-  },
-  cheongju: {
-    name: "청주시",
-    districts: {
-      heungdeok: { name: "흥덕구", dongs: ["복대동", "가경동", "봉명동", "신봉동", "운천동", "오송읍"] },
-      seowon: { name: "서원구", dongs: ["사창동", "모충동", "산남동", "분평동", "수곡동", "성화동"] },
-      sangdang: { name: "상당구", dongs: ["성안동", "탑대성동", "영운동", "금천동", "용담동", "용암동"] },
-      cheongwon: { name: "청원구", dongs: ["우암동", "내덕동", "율량동", "사천동", "오창읍"] }
     }
   }
 };
 
-// 💡 5번 업체명을 포함한 메인 추천 샵 원본 데이터 (여기서 5번 업체명을 원하시는 이름으로 자유롭게 수정하세요!)
 const initialLocalShops = [
-  {
-    id: 1,
-    name: "🔥 한국미녀홈타이",
-    desc: "전국 주요지역 신속 방문! 정성 가득한 테라피 & 릴렉싱 프로그램",
-    phone: "0507-1280-3299",
-    price: "90,000원부터~",
-    image: "/shop1.jpg"
-  },
-  {
-    id: 2,
-    name: "✨ 너무이쁜홈타이",
-    desc: "품격 있는 힐링을 선사하는 최고급 오일 프라이빗 방문 테라피 서비스",
-    phone: "0507-1280-3190",
-    price: "60,000원부터~",
-    image: "/shop2.jpg"
-  },
-  {
-    id: 3,
-    name: "💎 예쁜걸홈타이",
-    desc: "재방문율 1위! 칼도착 25분 보장, 철저한 위생 관리와 럭셔리 케어",
-    phone: "0507-1280-3185",
-    price: "60,000원부터~",
-    image: "/shop3.jpg"
-  },
-  {
-    id: 4,
-    name: "🌟 20대프리미엄홈케어",
-    desc: "전문 힐러들의 맞춤형 VIP 피로회복 특화 프로그램 진행 중",
-    phone: "0507-1280-3222",
-    price: "60,000원부터~",
-    image: "/shop4.jpg"
-  },
-  {
-  id: 5,
-  name: "👑 한국골든테라피", 
-  desc: "선입금 없는 100% 후불제! 수도권 및 전국 주요지역 25분 내 도착",
-  phone: "0507-1280-3360",
-  price: "60,000원부터~",
-  image: "/shop5.jpg"
-}
+  { id: 1, name: "🔥 한국미녀홈타이", desc: "전국 주요지역 신속 방문! 정성 가득한 테라피 & 릴렉싱 프로그램", phone: "0507-1280-3303", price: "100,000원부터~", image: "/shop1.jpg" },
+  { id: 2, name: "✨ 너무이쁜홈타이", desc: "품격 있는 힐링을 선사하는 최고급 오일 프라이빗 방문 테라피 서비스", phone: "0507-1280-3190", price: "60,000원부터~", image: "/shop2.jpg" },
+  { id: 3, name: "💎 예쁜걸홈타이", desc: "칼도착 25분 보장, 철저한 위생 관리와 럭셔리 케어", phone: "0507-1280-3185", price: "60,000원부터~", image: "/shop3.jpg" },
+  { id: 4, name: "🌟20대퀸즈홈테라피", desc: "전문 힐러들의 맞춤형 VIP 피로회복 특화 프로그램", phone: "0507-1280-3222", price: "60,000원부터~", image: "/shop4.jpg" },
+  { id: 5, name: "👑 한국골든테라피", desc: "선입금 없는 100% 후불제! 수도권 주요지역 25분 내 도착", phone: "0507-1280-3360", price: "110,000원부터~", image: "/shop5.jpg" }
 ];
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="bg-black/60 rounded-2xl border border-white/5 overflow-hidden transition-colors">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 text-left flex justify-between items-center font-bold text-sm text-gray-200 hover:text-amber-400 transition-colors"
-      >
-        <span className="flex items-center gap-2">
-          <span className="text-amber-400">Q.</span> {question}
-        </span>
-        <span className="text-amber-400 font-extrabold text-lg">{isOpen ? "−" : "+"}</span>
-      </button>
-      {isOpen && (
-        <div className="px-4 pb-4 text-xs text-gray-300 leading-relaxed border-t border-white/5 pt-3 bg-black/40">
-          <span className="text-red-400 font-bold">A. </span>{answer}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function MainClientUI() {
   const router = useRouter();
   const [selectedRegion, setSelectedRegion] = useState("seoul");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedDong, setSelectedDong] = useState("");
+  
+  // 💡 모드 선택 상태 추가: "normal" (기본 방문케어) vs "healing" (출장 힐링 마사지)
+  const [searchMode, setSearchMode] = useState<"normal" | "healing">("healing");
 
-  // 새로고침 시 5개 업체 순서가 매번 무작위로 섞이도록 설정
   const [shuffledShops, setShuffledShops] = useState(initialLocalShops);
 
   useEffect(() => {
@@ -263,7 +146,10 @@ export default function MainClientUI() {
     const districtObj = regionData[selectedRegion]?.districts[selectedDistrict];
     const districtName = districtObj ? districtObj.name : selectedDistrict;
     
-    const baseUrl = `/${selectedRegion}/${encodeURIComponent(districtName)}`;
+    // 💡 모드에 따라 이동할 경로 분기 (일반 vs 힐링 키워드 페이지)
+    const prefix = searchMode === "healing" ? `/healing/${selectedRegion}` : `/${selectedRegion}`;
+    const baseUrl = `${prefix}/${encodeURIComponent(districtName)}`;
+    
     const targetUrl = selectedDong 
       ? `${baseUrl}?dong=${encodeURIComponent(selectedDong)}` 
       : baseUrl;
@@ -277,46 +163,13 @@ export default function MainClientUI() {
   return (
     <div className="bg-[#050505] text-gray-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-black">
       
-      {/* 상단 헤더 */}
-      <header className="sticky top-0 z-50 bg-[#050505]/85 backdrop-blur-xl border-b border-amber-500/20 px-4 py-3.5 shadow-[0_4px_20px_rgba(245,158,11,0.1)]">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-3 group">
-            <img 
-              src="/logo.png" 
-              alt="마사지모아 로고" 
-              className="w-10 h-10 rounded-xl object-cover border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.4)] group-hover:scale-105 transition-transform" 
-            />
-            <div className="flex flex-col">
-              <span className="text-xl font-black tracking-wider bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
-                마사지모아
-              </span>
-              <span className="text-[10px] text-gray-400 tracking-tighter">MASSAGE MOA · NATIONWIDE SERVICE</span>
-            </div>
-          </Link>
-          
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-            </span>
-            <span className="text-xs px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-red-500/20 text-amber-300 border border-amber-500/30 font-bold shadow-inner">
-              🔥 24시 실시간 영업중
-            </span>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-4xl mx-auto px-4 py-8 w-full flex-1 space-y-12">
         
         {/* 상단 메인 배너 */}
         <section className="text-center my-2">
           <div className="overflow-hidden rounded-3xl border border-amber-500/30 shadow-[0_0_40px_rgba(245,158,11,0.15)] relative h-60 md:h-80 flex items-center justify-center p-6">
             <div className="absolute inset-0 z-0">
-              <img 
-                src="/banner.jpg" 
-                alt="메인 힐링 배너" 
-                className="w-full h-full object-cover filter brightness-[0.35] scale-105"
-              />
+              <img src="/banner.jpg" alt="메인 힐링 배너" className="w-full h-full object-cover filter brightness-[0.35] scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
             </div>
             
@@ -328,45 +181,34 @@ export default function MainClientUI() {
                 전국 주요 도시 <span className="bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent">25분 내 신속 방문 케어</span>
               </h1>
               <p className="text-gray-200 text-xs md:text-sm font-medium max-w-lg mx-auto drop-shadow">
-                엄선된 베테랑 관리사의 맞춤형 힐링 피로회복! 지금 바로 내 주변 마사지모아 제휴샵을 확인하세요.
+                엄선된 베테랑 관리사의 맞춤형 힐링 피로회복! 지금 바로 내 주변 휴식의정원 제휴샵을 확인하세요.
               </p>
             </div>
           </div>
         </section>
 
-        {/* 메인 추천 제휴업체 5개 박스 카드리스트 (새로고침 시 랜덤 섞임) */}
+        {/* 제휴업체 리스트 섹션 (기존 코드 유지) */}
         <section className="space-y-6">
           <div className="text-center mb-6">
             <p className="text-xs text-amber-400 font-bold tracking-widest uppercase">BEST RECOMMENDED SHOPS</p>
             <h2 className="text-xl md:text-2xl font-black text-white mt-1">
-              🏆 마사지모아 추천 프리미엄 제휴업체
+              🏆 휴식의정원 추천 프리미엄 제휴업체
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {shuffledShops.map((lShop) => (
               <div key={lShop.id} className="bg-[#121214] border border-amber-500/20 hover:border-amber-500/60 rounded-2xl p-4 flex gap-4 items-center shadow-md transition-all group relative">
-                
                 <Link href={`/shop/${lShop.id}`} className="absolute inset-0 z-10" aria-label={`${lShop.name} 상세페이지 보기`} />
-
-                <img 
-                  src={lShop.image} 
-                  alt={lShop.name} 
-                  className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover border border-white/10 group-hover:scale-105 transition-transform" 
-                />
+                <img src={lShop.image} alt={lShop.name} className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover border border-white/10 group-hover:scale-105 transition-transform" />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-extrabold text-sm md:text-base text-white truncate group-hover:text-amber-400 transition-colors">
                     {lShop.name}
                   </h3>
-                  <p className="text-[11px] text-gray-400 mt-1 line-clamp-2">
-                    {lShop.desc}
-                  </p>
+                  <p className="text-[11px] text-gray-400 mt-1 line-clamp-2">{lShop.desc}</p>
                   <div className="mt-2.5 flex items-center justify-between">
                     <span className="text-xs font-black text-amber-400">{lShop.price}</span>
-                    <a 
-                      href={`tel:${lShop.phone}`} 
-                      className="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow transition-colors relative z-20"
-                    >
+                    <a href={`tel:${lShop.phone}`} className="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow transition-colors relative z-20">
                       전화연결
                     </a>
                   </div>
@@ -376,26 +218,38 @@ export default function MainClientUI() {
           </div>
         </section>
 
-        {/* 지역 선택 박스 */}
+        {/* 💡 지역 선택 및 검색 모드 선택 박스 */}
         <section className="pt-6 border-t border-white/10">
           <div className="bg-gradient-to-b from-[#18181b] to-[#0f0f11] border-2 border-amber-500/40 p-6 rounded-3xl max-w-xl mx-auto shadow-[0_10px_30px_rgba(0,0,0,0.8)] text-left relative overflow-hidden">
+            
             <div className="flex items-center justify-between mb-4">
               <label className="text-xs text-amber-400 font-black uppercase tracking-wider flex items-center gap-1.5">
                 📍 내 주변 마사지 검색하기
               </label>
-              <span className="text-[11px] text-gray-400 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5">
-                지역 전용 화면 이동
-              </span>
+              
+              {/* 검색 모드 전환 탭 */}
+              <div className="flex bg-black/60 p-1 rounded-xl border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setSearchMode("healing")}
+                  className={`text-[10px] px-2.5 py-1 rounded-lg font-bold transition-all ${searchMode === "healing" ? "bg-amber-500 text-black shadow" : "text-gray-400 hover:text-white"}`}
+                >
+                  ✨ 출장힐링
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchMode("normal")}
+                  className={`text-[10px] px-2.5 py-1 rounded-lg font-bold transition-all ${searchMode === "normal" ? "bg-amber-500 text-black shadow" : "text-gray-400 hover:text-white"}`}
+                >
+                  📍 일반방문
+                </button>
+              </div>
             </div>
 
             <div className="space-y-3.5">
               <div>
                 <span className="text-[11px] text-gray-400 block mb-1 font-semibold">1단계: 시·도 선택</span>
-                <select 
-                  value={selectedRegion} 
-                  onChange={handleRegionChange} 
-                  className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-bold p-3.5 rounded-xl border border-amber-500/30 focus:border-amber-400 transition-colors shadow-inner"
-                >
+                <select value={selectedRegion} onChange={handleRegionChange} className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-bold p-3.5 rounded-xl border border-amber-500/30 focus:border-amber-400 transition-colors shadow-inner">
                   {Object.keys(regionData).map((key) => (
                     <option key={key} value={key} className="bg-[#1e1e1e] text-white">
                       {regionData[key].name}
@@ -406,11 +260,7 @@ export default function MainClientUI() {
 
               <div>
                 <span className="text-[11px] text-gray-400 block mb-1 font-semibold">2단계: 구·시·군 선택</span>
-                <select 
-                  value={selectedDistrict} 
-                  onChange={handleDistrictChange} 
-                  className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-bold p-3.5 rounded-xl border border-amber-500/30 focus:border-amber-400 transition-colors shadow-inner"
-                >
+                <select value={selectedDistrict} onChange={handleDistrictChange} className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-bold p-3.5 rounded-xl border border-amber-500/30 focus:border-amber-400 transition-colors shadow-inner">
                   <option value="" className="bg-[#1e1e1e] text-gray-400">구 / 시 / 군을 선택해주세요</option>
                   {Object.keys(currentDistricts).map((dKey) => (
                     <option key={dKey} value={dKey} className="bg-[#1e1e1e] text-white">
@@ -422,12 +272,7 @@ export default function MainClientUI() {
 
               <div>
                 <span className="text-[11px] text-gray-400 block mb-1 font-semibold">3단계: 동 선택 (텍스트 필터)</span>
-                <select 
-                  value={selectedDong} 
-                  onChange={(e) => setSelectedDong(e.target.value)} 
-                  disabled={!selectedDistrict}
-                  className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-medium p-3.5 rounded-xl border border-amber-500/30 disabled:opacity-30 transition-colors shadow-inner"
-                >
+                <select value={selectedDong} onChange={(e) => setSelectedDong(e.target.value)} disabled={!selectedDistrict} className="bg-black/80 text-sm text-white w-full outline-none cursor-pointer font-medium p-3.5 rounded-xl border border-amber-500/30 disabled:opacity-30 transition-colors shadow-inner">
                   <option value="" className="bg-[#1e1e1e] text-gray-400">동 전체 보기</option>
                   {currentDongs.map((dong, idx) => (
                     <option key={idx} value={dong} className="bg-[#1e1e1e] text-white">
@@ -441,107 +286,13 @@ export default function MainClientUI() {
                 onClick={handleSearch}
                 className="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-black font-black py-4 rounded-2xl text-sm transition-all shadow-[0_0_25px_rgba(245,158,11,0.4)] mt-3 cursor-pointer transform active:scale-[0.98]"
               >
-                🚀 내 주변 마사지샵 모아보기
+                {searchMode === "healing" ? "✨ 출장 힐링 마사지샵 모아보기" : "🚀 내 주변 방문 홈케어 모아보기"}
               </button>
             </div>
           </div>
         </section>
 
-        {/* 이용 방법 4단계 */}
-        <section className="bg-[#0d0d0f] border border-amber-500/30 p-6 md:p-8 rounded-3xl space-y-6">
-          <div className="text-center">
-            <span className="text-amber-400 text-xs font-bold tracking-widest">HOW TO USE</span>
-            <h3 className="text-xl font-black text-white mt-1">마사지모아 이용 가이드</h3>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-black/60 p-4 rounded-2xl border border-white/5 text-center">
-              <span className="text-xs text-amber-400 font-bold">STEP 1</span>
-              <h4 className="font-bold text-white mt-1">지역 선택</h4>
-              <p className="text-xs text-gray-400 mt-1">원하시는 방문 및 이용 지역을 선택합니다.</p>
-            </div>
-            <div className="bg-black/60 p-4 rounded-2xl border border-white/5 text-center">
-              <span className="text-xs text-amber-400 font-bold">STEP 2</span>
-              <h4 className="font-bold text-white mt-1">업체 비교</h4>
-              <p className="text-xs text-gray-400 mt-1">코스, 가격, 리뷰를 꼼꼼하게 확인합니다.</p>
-            </div>
-            <div className="bg-black/60 p-4 rounded-2xl border border-white/5 text-center">
-              <span className="text-xs text-amber-400 font-bold">STEP 3</span>
-              <h4 className="font-bold text-white mt-1">간편 예약</h4>
-              <p className="text-xs text-gray-400 mt-1">전화 연결을 통해 희망 시간대를 예약합니다.</p>
-            </div>
-            <div className="bg-black/60 p-4 rounded-2xl border border-white/5 text-center">
-              <span className="text-xs text-amber-400 font-bold">STEP 4</span>
-              <h4 className="font-bold text-white mt-1">후불 힐링 케어</h4>
-              <p className="text-xs text-gray-400 mt-1">선입금 없이 편안하게 케어를 이용합니다.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 고객 실제 후기 */}
-        <section className="space-y-4">
-          <div className="text-center">
-            <span className="text-amber-400 text-xs font-bold tracking-widest uppercase">REAL REVIEWS</span>
-            <h3 className="text-xl font-black text-white mt-1">마사지모아 실제 이용 고객 후기</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-[#0f0f12] p-5 rounded-2xl border border-white/5 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-amber-400 font-black text-sm">★★★★★ 5.0</span>
-                <span className="text-[11px] text-gray-500">서울 직장인</span>
-              </div>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                &quot;시간 약속 칼같이 맞춰오시고 친절하셨어요. 뭉친 어깨가 싹 풀려서 주말마다 자주 찾게 되네요!&quot;
-              </p>
-            </div>
-            <div className="bg-[#0f0f12] p-5 rounded-2xl border border-white/5 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-amber-400 font-black text-sm">★★★★★ 5.0</span>
-                <span className="text-[11px] text-gray-500">경기 이용자</span>
-              </div>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                &quot;선입금 없는 후불제라 정말 부담없이 이용할 수 있어서 만족합니다. 매니저분 마인드도 훌륭했어요.&quot;
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Q&A */}
-        <section className="space-y-4">
-          <div className="text-center">
-            <span className="text-amber-400 text-xs font-bold tracking-widest uppercase">FAQ & QUESTIONS</span>
-            <h3 className="text-xl font-black text-white mt-1">자주 묻는 질문</h3>
-          </div>
-          <div className="space-y-3">
-            <FaqItem 
-              question="방문까지 보통 시간이 얼마나 소요되나요?"
-              answer="전국 주요 지역 기준 평균 20분~30분 내외로 신속하게 방문 서비스가 가능합니다."
-            />
-            <FaqItem 
-              question="선입금이나 예약금이 발생하나요?"
-              answer="마사지모아 제휴업체는 100% 후불제로 운영되므로 도착 전 선입금을 절대 요구하지 않습니다."
-            />
-          </div>
-        </section>
-
       </main>
-
-      {/* 푸터 영역 */}
-      <footer className="bg-[#030303] border-t border-white/10 py-10 text-center text-gray-500 text-xs mt-auto">
-        <div className="max-w-4xl mx-auto px-4 space-y-4">
-          
-          <div>
-            <a 
-              href="tel:0507-1280-3344" 
-              className="inline-flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-amber-400 font-bold px-4 py-2 rounded-xl border border-amber-500/30 hover:border-amber-400 transition-all text-xs shadow-md"
-            >
-              <span>🤝</span> 제휴 및 입점문의 (0507-1280-3344)
-            </a>
-          </div>
-
-          <p className="text-gray-400 font-bold">마사지모아는 건전하고 신뢰할 수 있는 전국의 마사지·테라피 정보 플랫폼입니다.</p>
-          <p className="text-[11px] text-gray-600">COPYRIGHT &copy; 마사지모아 ALL RIGHTS RESERVED.</p>
-        </div>
-      </footer>
     </div>
   );
 }

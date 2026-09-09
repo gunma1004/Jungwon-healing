@@ -2,11 +2,11 @@ import { Metadata } from "next";
 import MainClientUI from "./MainClientUI";
 
 export const metadata: Metadata = {
-  title: "마사지모아 | 전국 24시 방문 홈케어 & 프리미엄 힐링 테라피 안내",
+  title: "휴식의정원 | 전국 24시 방문 홈케어 & 프리미엄 힐링 테라피 안내",
   description:
     "서울, 경기, 인천, 부산, 대구, 대전 전지역 25분 내 신속 방문! 선입금 없는 100% 안심 후불제 예약. 타이, 아로마, 스웨디시 제휴업체 정보 안내.",
   keywords: [
-    "마사지모아",
+    "휴식의정원",
     "서울 홈케어",
     "경기 홈케어",
     "인천 홈케어",
@@ -18,11 +18,11 @@ export const metadata: Metadata = {
     "24시 힐링 케어",
   ],
   openGraph: {
-    title: "마사지모아 | 전국 24시 방문 홈케어 & 마사지 추천",
+    title: "휴식의정원 | 전국 24시 방문 홈케어 & 마사지 추천",
     description:
       "선입금 없는 100% 후불 안심 케어! 전국 주요 도시 빠른 방문 바디케어 정보를 한눈에 모아보세요.",
-    url: "https://massage-moa.vercel.app", // Cloudflare 배포 기본 도메인과 통일
-    siteName: "마사지모아",
+    url: "https://Jungwon-healing.netlify.app", // 새로운 Netlify 도메인 주소 반영
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },

@@ -2,13 +2,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "생생 후기 | 마사지모아 - 100% 실제 고객 방문 케어 이용 리뷰",
-  description: "서울·경기·인천·부산·대구·대전 등 전국 마사지모아 제휴샵을 직접 이용하신 고객님들의 100% 솔직한 평점과 후기를 확인해 보세요.",
+  title: "생생 후기 | 휴식의정원 - 100% 실제 고객 방문 케어 이용 리뷰",
+  description: "서울·경기·인천·부산·대구·대전 등 전국 휴식의정원 제휴샵을 직접 이용하신 고객님들의 100% 솔직한 평점과 후기를 확인해 보세요.",
   openGraph: {
-    title: "생생 후기 | 마사지모아",
-    description: "마사지모아 실제 고객님들의 100% 솔직한 방문 테라피 이용 후기",
-    url: "https://massagemoa.com/reviews",
-    siteName: "마사지모아",
+    title: "생생 후기 | 휴식의정원",
+    description: "휴식의정원 실제 고객님들의 100% 솔직한 방문 테라피 이용 후기",
+    url: "https://Jungwon-healing.netlify.app/reviews",
+    siteName: "휴식의정원",
     locale: "ko_KR",
     type: "website",
   },
@@ -56,7 +56,7 @@ export default function ReviewsPage() {
       rate: "★★★★★ 5.0", 
       course: "감성 스웨디시",
       date: "최근 이용",
-      text: "마사지모아 후기 보고 믿고 예약했는데 역대급 힐링이었습니다. 다음에도 꼭 다시 이용하겠습니다!" 
+      text: "휴식의정원 후기 보고 믿고 예약했는데 역대급 힐링이었습니다. 다음에도 꼭 다시 이용하겠습니다!" 
     },
   ];
 
@@ -73,7 +73,7 @@ export default function ReviewsPage() {
             실제 이용 고객 생생 후기
           </h1>
           <p className="text-xs md:text-sm text-gray-400">
-            마사지모아를 직접 경험하신 고객님들의 100% 솔직한 피로회복 후기
+            휴식의정원을 직접 경험하신 고객님들의 100% 솔직한 피로회복 후기
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export default function ReviewsPage() {
         <div className="bg-gradient-to-r from-amber-500/10 via-amber-400/5 to-amber-500/10 border border-amber-500/30 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-inner">
           <div>
             <span className="text-amber-300 font-extrabold text-sm md:text-base">
-              🏆 마사지모아 고객 평균 만족도
+              🏆 휴식의정원 고객 평균 만족도
             </span>
             <p className="text-xs text-gray-300 mt-0.5">
               철저한 검증과 100% 후불제 정직한 서비스로 높은 재방문율을 유지합니다.
@@ -127,7 +127,7 @@ export default function ReviewsPage() {
             href="/"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-400 text-black font-extrabold text-xs px-6 py-3.5 rounded-xl shadow-lg hover:from-amber-400 hover:to-yellow-300 transition-all active:scale-95"
           >
-            <span>🏠</span> 마사지모아 홈으로 돌아가기
+            <span>🏠</span> 휴식의정원 홈으로 돌아가기
           </Link>
         </div>
 
