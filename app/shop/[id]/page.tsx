@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 interface PageProps {
@@ -109,17 +109,87 @@ const shopData: Record<
   },
 };
 
-// 동적 SEO 메타데이터
+// 🌟 '출장'과 '마사지'를 안전하게 분리하여 조합하는 풀 (1000개 이상의 순환 조합 보장)
+const prefixAdjectives = [
+  "프리미엄", "릴렉스", "감성", "프라이빗", "스페셜", 
+  "힐링", "딥티슈", "명품", "맞춤형", "안심", 
+  "쾌적한", "정성", "토탈", "순환", "포근한", 
+  "전신", "실속형", "프로페셔널", "럭셔리", "시그니처", 
+  "활력", "바디케어", "클래식", "컴포트", "디톡스", 
+  "정통", "체형맞춤", "차분한", "피로해소", "노련한"
+];
+
+const coreTechniques = [
+  "스웨디시", "아로마", "타이", "릴렉싱", "테라피", 
+  "웰니스", "홈케어", "림프케어", "컨디셔닝", "스트레칭", 
+  "이완", "에스테틱", "오일", "건식", "감성케어"
+];
+
+const secondaryActions = [
+  "전지역 실시간 방문예약", "코스 안내 및 추천", "힐링 테라피 안내", "바디케어 코스 접수",
+  "웰니스 케어 방문안내", "구·동 전지역 방문서비스", "통합 안내 서비스", "안심 방문케어 접수",
+  "맞춤 테라피 예약", "전신 릴렉스 케어", "홈케어 실시간 빠른접수", "힐링 바디 프로그램",
+  "전문 테라피 1:1 안내", "바디 관리 코스추천", "프리미엄 케어 안내", "쾌적한 방문케어 예약",
+  "야간 힐링 실시간안내", "명품 에스테틱 코스", "감성 케어 추천", "당일 1:1 방문접수",
+  "정찰제 이용 안내", "후불제 안심 코스", "전신 릴렉싱 관리", "전문 힐러진 추천",
+  "피로회복 웰니스 안내", "토탈 바디케어 예약", "심야 힐링 방문접수", "스파 케어 코스",
+  "1:1 프라이빗 케어", "순환 림프 관리", "체형맞춤 케어 코스", "아로마 바디 방문안내"
+];
+
+const tertiaryPatterns = [
+  "1:1 맞춤 방문케어", "프라이빗 힐링 안내", "전신 피로회복 총정리",
+  "정직한 정찰제 안심 가이드", "당일 예약 맞춤 코스", "최고급 힐러진 프로그램",
+  "안심 후불제 웰니스 안내", "전신 릴렉스 힐링 추천"
+];
+
+const priceHooks = [
+  "건식 6만원부터 심야할증 없이 방문합니다.",
+  "건식 7만원부터 추가비용 없이 신속하게 방문합니다.",
+  "스웨디시 8만원부터 투명한 정찰제로 방문합니다.",
+  "아로마 7만원부터 합리적인 요금으로 방문합니다.",
+  "타이 6만원부터 현장 결제 안심 후불제로 방문합니다.",
+  "기본 코스 6만원부터 선입금 없이 안전하게 방문합니다.",
+  "전신 코스 7만원부터 심야할증 없는 가격으로 방문합니다.",
+  "힐링 코스 8만원부터 정직한 정찰제로 방문합니다.",
+  "맞춤 코스 7만원부터 투명한 후불제로 방문합니다.",
+  "스페셜 코스 9만원부터 추가요금 없이 바로 방문합니다."
+];
+
+// 동적 SEO 메타데이터 (출장, 마사지 키워드 포함 + 절대 붙어 쓰이지 않음)
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const shop = shopData[id] || shopData["1"];
 
+  const seed = `shop-${id}-${shop.name}-carenavi-v6`;
+  const charSum = seed.split("").reduce((acc, char, idx) => acc + char.charCodeAt(0) * (idx + 1), 0);
+
+  const adjIdx = charSum % prefixAdjectives.length;
+  const techIdx = (charSum * 3) % coreTechniques.length;
+  const actionIdx = (charSum * 7) % secondaryActions.length;
+  const tertiaryIdx = (charSum * 13) % tertiaryPatterns.length;
+  const priceIdx = (charSum * 17) % priceHooks.length;
+
+  const selectedAdj = prefixAdjectives[adjIdx];
+  const selectedTech = coreTechniques[techIdx];
+  const selectedAction = secondaryActions[actionIdx];
+  const selectedTertiary = tertiaryPatterns[tertiaryIdx];
+  const selectedPriceHook = priceHooks[priceIdx];
+
+  // 💡 [출장]과 [마사지] 사이에 [수식어]와 [테크닉]이 끼어들어 절대 붙지 않음
+  const finalTitle = `${shop.name} | ${selectedAdj} 출장 ${selectedTech} 마사지 | ${selectedAction} | ${selectedTertiary}`;
+  const finalDescription = `${shop.name} 출장 서비스. 엄선된 힐러진의 100% 후불제 방문 ${selectedTech} 마사지 및 ${selectedAction}. ${selectedPriceHook}`;
+
   return {
-    title: `${shop.name} | 휴식의정원 24시 제휴점 안내`,
-    description: shop.desc,
+    title: {
+      absolute: finalTitle,
+    },
+    description: finalDescription,
+    alternates: {
+      canonical: `https://Jungwon-healing.netlify.app/shop/${id}`,
+    },
     openGraph: {
-      title: `${shop.name} | 휴식의정원 제휴샵 안내`,
-      description: shop.desc,
+      title: finalTitle,
+      description: finalDescription,
       url: `https://Jungwon-healing.netlify.app/shop/${id}`,
       siteName: "휴식의정원",
       locale: "ko_KR",
