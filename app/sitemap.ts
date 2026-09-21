@@ -1,14 +1,15 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // 🌐 실제 서비스 도메인 주소로 통일
-  const baseUrl = 'https://Jungwon-healing.netlify.app';
+  // 🌐 실제 서비스 도메인 주소 통일
+  const baseUrl = 'https://jungwon-healing.netlify.app';
+  const currentDate = new Date();
 
   // 1. 메인 홈 페이지
   const mainRoute: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 1.0,
     },
@@ -23,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'reviews',
   ].map((route) => ({
     url: `${baseUrl}/${route}`,
-    lastModified: new Date(),
+    lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
@@ -31,131 +32,153 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 3. 메인 5개 제휴업체 상세 페이지 (/shop/1 ~ /shop/5)
   const shopRoutes: MetadataRoute.Sitemap = [1, 2, 3, 4, 5].map((id) => ({
     url: `${baseUrl}/shop/${id}`,
-    lastModified: new Date(),
+    lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
-  // 4. 구·시 주요 권역 목록 (83개 지역)
-  const regionList = [
-    // 서울 주요 권역
-    { region: 'seoul', district: '종로구' },
-    { region: 'seoul', district: '중구' },
-    { region: 'seoul', district: '용산구' },
-    { region: 'seoul', district: '성동구' },
-    { region: 'seoul', district: '광진구' },
-    { region: 'seoul', district: '동대문구' },
-    { region: 'seoul', district: '중랑구' },
-    { region: 'seoul', district: '성북구' },
-    { region: 'seoul', district: '강북구' },
-    { region: 'seoul', district: '도봉구' },
-    { region: 'seoul', district: '노원구' },
-    { region: 'seoul', district: '은평구' },
-    { region: 'seoul', district: '서대문구' },
-    { region: 'seoul', district: '마포구' },
-    { region: 'seoul', district: '양천구' },
-    { region: 'seoul', district: '강서구' },
-    { region: 'seoul', district: '구로구' },
-    { region: 'seoul', district: '금천구' },
-    { region: 'seoul', district: '영등포구' },
-    { region: 'seoul', district: '동작구' },
-    { region: 'seoul', district: '관악구' },
-    { region: 'seoul', district: '서초구' },
-    { region: 'seoul', district: '강남구' },
-    { region: 'seoul', district: '송파구' },
-    { region: 'seoul', district: '강동구' },
+  // 4. 전국 권역 및 세부 동/읍/면 전체 계층 데이터 매핑
+  const regionHierarchy: Record<string, Record<string, string[]>> = {
+    seoul: {
+      jongno: ["청운동", "효자동", "사직동", "삼청동", "부암동", "평창동", "무악동", "교남동", "가회동", "종로1가", "종로5가", "이화동", "혜화동", "창신동", "숭인동"],
+      jung: ["소공동", "회현동", "명동", "필동", "장충동", "광희동", "을지로동", "신당동", "다산동", "약수동", "청구동", "황학동", "중림동"],
+      yongsan: ["후암동", "용산2가동", "남영동", "청파동", "원효로동", "효창동", "용문동", "이촌동", "이태원동", "한남동", "서빙고동", "보광동"],
+      seongdong: ["왕십리동", "마장동", "사근동", "행당동", "응봉동", "금호동", "옥수동", "성수동", "송정동", "용답동"],
+      gwangjin: ["중곡동", "능동", "구의동", "광장동", "자양동", "화양동", "군자동"],
+      dongdaemun: ["신설동", "용두동", "제기동", "전농동", "답십리동", "장안동", "청량리동", "회기동", "휘경동", "이문동"],
+      jungnang: ["면목동", "상봉동", "중화동", "묵동", "망우동", "신내동"],
+      seongbuk: ["성북동", "삼선동", "동선동", "돈암동", "안암동", "보문동", "정릉동", "길음동", "종암동", "월곡동", "장위동", "석관동"],
+      gangbuk: ["삼양동", "미아동", "송중동", "송천동", "번동", "수유동", "우이동", "인수동"],
+      dobong: ["창동", "도봉동", "쌍문동", "방학동"],
+      nowon: ["상계동", "중계동", "하계동", "공릉동"],
+      eunpyeong: ["불광동", "갈현동", "구산동", "대조동", "응암동", "역촌동", "신사동", "증산동", "수색동", "진관동"],
+      seodaemun: ["천연동", "북아현동", "충현동", "신촌동", "연희동", "홍제동", "홍은동", "남가좌동", "북가좌동"],
+      mapo: ["공덕동", "아현동", "도화동", "용강동", "대흥동", "염리동", "서교동", "합정동", "망원동", "연남동", "성산동", "상암동"],
+      yangcheon: ["목동", "신월동", "신정동"],
+      gangseo: ["등촌동", "화곡동", "우장산동", "가양동", "발산동", "공항동", "방화동"],
+      guro: ["신도림동", "구로동", "가리봉동", "고척동", "개봉동", "오류동", "수궁동"],
+      geumcheon: ["가산동", "독산동", "시흥동"],
+      yeongdeungpo: ["영등포동", "여의동", "당산동", "도림동", "문래동", "양평동", "신길동", "대림동"],
+      dongjak: ["노량진동", "상도동", "흑석동", "사당동", "대방동", "신대방동"],
+      gwanak: ["보라매동", "청림동", "성현동", "행운동", "낙성대동", "청룡동", "은천동", "서원동", "신원동", "서림동", "신사동", "난향동", "조원동", "대학동", "난곡동", "삼성동", "미성동"],
+      seocho: ["서초동", "잠원동", "반포동", "방배동", "양재동", "내곡동"],
+      gangnam: ["역삼동", "개포동", "청담동", "삼성동", "대치동", "신사동", "논현동", "압구정동", "세곡동", "자곡동", "일원동", "수서동", "도곡동"],
+      songpa: ["잠실동", "풍납동", "거여동", "마천동", "방이동", "오금동", "송파동", "석촌동", "삼전동", "가락동", "문정동", "장지동", "위례동"],
+      gangdong: ["강일동", "상일동", "명일동", "고덕동", "암사동", "천호동", "성내동", "둔촌동"]
+    },
+    gyeonggi: {
+      suwon_jangan: ["파장동", "정자동", "영화동", "송죽동", "조원동", "율천동"],
+      suwon_gwonseon: ["세류동", "평동", "서둔동", "구운동", "호매실동", "곡선동", "권선동"],
+      suwon_paldal: ["매교동", "매산동", "고등동", "화서동", "지동", "우만동", "인계동", "행궁동"],
+      suwon_yeongtong: ["매탄동", "원천동", "영통동", "망포동", "광교동"],
+      seongnam_sujeong: ["신흥동", "태평동", "수진동", "단대동", "산성동", "양지동", "복정동", "위례동"],
+      seongnam_jungwon: ["성남동", "중앙동", "금광동", "은행동", "상대원동", "하대원동", "도촌동"],
+      seongnam_bundang: ["분당동", "수내동", "정자동", "서현동", "이매동", "야탑동", "금곡동", "구미동", "판교동", "백현동"],
+      goyang_deogyang: ["주교동", "원신동", "흥도동", "성사동", "효자동", "창릉동", "고양동", "관산동", "능곡동", "화정동", "행주동", "행신동", "화전동", "대덕동", "삼송동"],
+      goyang_ilsandong: ["식사동", "중산동", "정발산동", "백석동", "마두동", "장항동", "고봉동", "일산동", "풍산동"],
+      goyang_ilsanseo: ["탄현동", "주엽동", "대화동", "송포동", "가좌동", "덕이동"],
+      yongin_suji: ["풍덕천동", "신봉동", "죽전동", "동천동", "상현동", "성복동"],
+      yongin_giheung: ["구갈동", "보라동", "기흥동", "서농동", "구성동", "마북동", "동백동", "보정동", "상하동", "신갈동", "영덕동", "상갈동"],
+      bucheon_wonmi: ["심곡동", "중동", "상동", "역곡동", "춘의동", "원미동"]
+    },
+    incheon: {
+      jung: ["신포동", "신흥동", "동인천동", "개항동", "도원동", "율목동", "연안동"],
+      michuhol: ["숭의동", "용현동", "학익동", "도화동", "주안동", "관교동", "문학동"],
+      yeonsu: ["옥련동", "선학동", "연수동", "청학동", "동춘동", "송도동"],
+      namdong: ["구월동", "간석동", "만수동", "서창동", "논현동"],
+      bupyeong: ["부평동", "산곡동", "청천동", "갈산동", "삼산동", "부개동"],
+      gyeyang: ["효성동", "작전동", "계산동", "임학동", "동양동", "귤현동"],
+      seogu: ["가정동", "석남동", "청라동", "검암경서동", "신현원창동", "가좌동"]
+    },
+    busan: {
+      haeundae: ["우동", "중동", "좌동", "재송동", "반여동", "반송동", "송정동"],
+      busanjin: ["부전동", "양정동", "전포동", "개금동", "가야동", "초읍동", "연지동", "부암동"],
+      suyeong: ["남천동", "수영동", "망미동", "광안동"],
+      sasang: ["주례동", "감전동", "엄궁동", "덕포동", "괘법동", "학장동"],
+      saha: ["괴정동", "당리동", "하단동", "신평동", "장림동", "다대동", "구평동"],
+      dongnae: ["명륜동", "온천동", "사직동", "안락동", "복산동", "수민동"],
+      geumjung: ["장전동", "구서동", "금사동", "부곡동", "서동", "남산동"],
+      nam: ["대연동", "용호동", "용당동", "감만동", "우암동", "문현동"]
+    },
+    daegu: {
+      jung: ["동인동", "삼덕동", "성내동", "대신동", "남산동"],
+      suseong: ["범어동", "만촌동", "수성동", "지산동", "범물동", "파동", "두산동", "만촌동"],
+      dong: ["신암동", "신천동", "효목동", "도평동", "불로봉무동", "방촌동", "해안동", "안심동"],
+      seo: ["비산동", "평리동", "상중이동", "원대동", "내당동"],
+      nam: ["대명동", "봉덕동", "이천동"],
+      buk: ["고성동", "칠성동", "침산동", "산격동", "대현동", "복현동", "검단동", "무태조야동"],
+      dalseo: ["성당동", "두류동", "본리동", "감삼동", "죽전동", "용산동", "이곡동", "신당동", "월성동", "진천동", "상인동", "도원동"]
+    },
+    daejeon: {
+      seo: ["복수동", "도마동", "변동", "용문동", "탄방동", "둔산동", "갈마동", "월평동", "가수원동", "관저동"],
+      yuseong: ["진잠동", "합덕동", "온천동", "전민동", "구즉동", "관평동", "신성동"],
+      jung: ["은행선화동", "중촌동", "목동", "중촌동", "대흥동", "문창동", "석교동", "대사동", "용두동"],
+      dong: ["중앙동", "신인동", "효동", "산내동", "낭월동", "대동", "자양동", "가양동", "용운동"],
+      daedeok: ["오정동", "대화동", "회덕동", "비래동", "송촌동", "중리동", "법동", "신탄진동"]
+    },
+    gwangju_city: {
+      seo: ["양동", "양호동", "농성동", "광천동", "상무동", "치평동", "유덕동", "금호동", "서창동"],
+      buk: ["임동", "북동", "신안동", "중앙동", "우산동", "풍향동", "문화동", "문흥동", "두암동", "오치동", "매곡동", "삼각동", "일곡동", "건국동", "용봉동"],
+      gwangsan: ["송정동", "하남동", "첨단동", "신가동", "신창동", "수완동", "서산동", "삼도동", "본량동"],
+      dong: ["동명동", "제석동", "지원동", "산수동", "지산동", "서남동"],
+      nam: ["방림동", "양림동", "주월동", "진월동", "효덕동", "송암동", "대촌동"]
+    },
+    ulsan: {
+      nam: ["신정동", "삼산동", "달동", "야음동", "구영동", "무거동", "선암동"],
+      jung: ["학성동", "반구동", "복산동", "중앙동", "장현동", "우정동", "태화동", "성안동", "병영동"],
+      buk: ["효문동", "송정동", "양정동", "염포동", "농소동"],
+      dong: ["방어동", "화정동", "대송동", "일산동", "남목동"]
+    },
+    cheongju: {
+      heungdeok: ["오송읍", "강내면", "옥산면", "신봉동", "운천동", "봉명동", "가경동", "복대동", "창신동", "하복대동"],
+      seowon: ["사직동", "수곡동", "모충동", "산남동", "분평동", "성화동", "개신동", "죽림동"],
+      sangdang: ["용암동", "영운동", "금천동", "탑대성동", "성안동", "중앙동", "낭성면", "미원면", "가덕면", "남일면", "문의면"],
+      cheongwon: ["오창읍", "북이면", "내수읍", "우암동", "내덕동", "율량동", "사천동"]
+    }
+  };
 
-    // 경기 주요 권역
-    { region: 'gyeonggi', district: '수원시 장안구' },
-    { region: 'gyeonggi', district: '수원시 권선구' },
-    { region: 'gyeonggi', district: '수원시 팔달구' },
-    { region: 'gyeonggi', district: '수원시 영통구' },
-    { region: 'gyeonggi', district: '성남시 수정구' },
-    { region: 'gyeonggi', district: '성남시 중원구' },
-    { region: 'gyeonggi', district: '성남시 분당구' },
-    { region: 'gyeonggi', district: '고양시 덕양구' },
-    { region: 'gyeonggi', district: '고양시 일산동구' },
-    { region: 'gyeonggi', district: '고양시 일산서구' },
-    { region: 'gyeonggi', district: '용인시 수지구' },
-    { region: 'gyeonggi', district: '용인시 기흥구' },
-    { region: 'gyeonggi', district: '부천시 원미구' },
+  const dynamicRoutes: MetadataRoute.Sitemap = [];
 
-    // 인천 주요 권역
-    { region: 'incheon', district: '중구' },
-    { region: 'incheon', district: '미추홀구' },
-    { region: 'incheon', district: '연수구' },
-    { region: 'incheon', district: '남동구' },
-    { region: 'incheon', district: '부평구' },
-    { region: 'incheon', district: '계양구' },
-    { region: 'incheon', district: '서구' },
+  // 5. 각 구/시 및 세부 동 URL 및 힐링 키워드 페이지 동적 생성
+  Object.entries(regionHierarchy).forEach(([region, districts]) => {
+    Object.entries(districts).forEach(([districtSlug, dongs]) => {
+      // 5-1. 구 단위 페이지 (기본 & 힐링)
+      dynamicRoutes.push({
+        url: `${baseUrl}/${region}/${districtSlug}`,
+        lastModified: currentDate,
+        changeFrequency: 'daily',
+        priority: 0.9,
+      });
+      dynamicRoutes.push({
+        url: `${baseUrl}/healing/${region}/${districtSlug}`,
+        lastModified: currentDate,
+        changeFrequency: 'daily',
+        priority: 0.9,
+      });
 
-    // 부산 주요 권역
-    { region: 'busan', district: '해운대구' },
-    { region: 'busan', district: '부산진구' },
-    { region: 'busan', district: '수영구' },
-    { region: 'busan', district: '사상구' },
-    { region: 'busan', district: '사하구' },
-    { region: 'busan', district: '동래구' },
-    { region: 'busan', district: '금정구' },
-    { region: 'busan', district: '남구' },
-
-    // 대구 주요 권역
-    { region: 'daegu', district: '중구' },
-    { region: 'daegu', district: '수성구' },
-    { region: 'daegu', district: '동구' },
-    { region: 'daegu', district: '서구' },
-    { region: 'daegu', district: '남구' },
-    { region: 'daegu', district: '북구' },
-    { region: 'daegu', district: '달서구' },
-
-    // 대전 주요 권역
-    { region: 'daejeon', district: '서구' },
-    { region: 'daejeon', district: '유성구' },
-    { region: 'daejeon', district: '중구' },
-    { region: 'daejeon', district: '동구' },
-    { region: 'daejeon', district: '대덕구' },
-
-    // 광주 주요 권역
-    { region: 'gwangju_city', district: '서구' },
-    { region: 'gwangju_city', district: '북구' },
-    { region: 'gwangju_city', district: '광산구' },
-    { region: 'gwangju_city', district: '동구' },
-    { region: 'gwangju_city', district: '남구' },
-
-    // 울산 주요 권역
-    { region: 'ulsan', district: '남구' },
-    { region: 'ulsan', district: '중구' },
-    { region: 'ulsan', district: '북구' },
-    { region: 'ulsan', district: '동구' },
-
-    // 청주 주요 권역
-    { region: 'cheongju', district: '흥덕구' },
-    { region: 'cheongju', district: '서원구' },
-    { region: 'cheongju', district: '상당구' },
-    { region: 'cheongju', district: '청원구' },
-  ];
-
-  // A. 기본 지역별 상세 페이지 라우트
-  const regionRoutes: MetadataRoute.Sitemap = regionList.map((item) => ({
-    url: `${baseUrl}/${item.region}/${encodeURIComponent(item.district)}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 0.9,
-  }));
-
-  // B. 💡 신규 추가: 출장 힐링 마사지 전용 페이지 라우트 (/healing/...)
-  const healingRegionRoutes: MetadataRoute.Sitemap = regionList.map((item) => ({
-    url: `${baseUrl}/healing/${item.region}/${encodeURIComponent(item.district)}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily',
-    priority: 0.9,
-  }));
+      // 5-2. 세부 동 단위 페이지 (기본 & 힐링)
+      dongs.forEach((dong) => {
+        const encodedDong = encodeURIComponent(dong);
+        dynamicRoutes.push({
+          url: `${baseUrl}/${region}/${districtSlug}/${encodedDong}`,
+          lastModified: currentDate,
+          changeFrequency: 'daily',
+          priority: 0.85,
+        });
+        dynamicRoutes.push({
+          url: `${baseUrl}/healing/${region}/${districtSlug}/${encodedDong}`,
+          lastModified: currentDate,
+          changeFrequency: 'daily',
+          priority: 0.85,
+        });
+      });
+    });
+  });
 
   return [
     ...mainRoute,
     ...categoryRoutes,
     ...shopRoutes,
-    ...regionRoutes,
-    ...healingRegionRoutes, // 사이트맵에 힐링 키워드 페이지들 동적 추가
+    ...dynamicRoutes,
   ];
 }
