@@ -37,7 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // 4. 전국 권역 및 세부 동/읍/면 전체 계층 데이터 매핑 (경기도 31개 시·군·구 완벽 포함)
+  // 4. 전국 권역 및 세부 동/읍/면 전체 계층 데이터 매핑
   const regionHierarchy: Record<string, Record<string, string[]>> = {
     seoul: {
       jongno: ["청운동", "효자동", "사직동", "삼청동", "부암동", "평창동", "무악동", "교남동", "가회동", "종로1가", "종로5가", "이화동", "혜화동", "창신동", "숭인동"],
@@ -170,10 +170,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const dynamicRoutes: MetadataRoute.Sitemap = [];
 
-  // 5. 각 구/시 및 세부 동 URL 및 힐링 키워드 페이지 동적 생성
+  // 5. 각 구/시 및 세부 동 URL 생성 (슬러그 형식 + 쿼리스트링 형식 모두 포함)
   Object.entries(regionHierarchy).forEach(([region, districts]) => {
     Object.entries(districts).forEach(([districtSlug, dongs]) => {
-      // 5-1. 구 단위 페이지 (기본 & 힐링)
+      // 5-1. 구 단위 페이지 (기본 & 힐링) - 슬러그 형식
       dynamicRoutes.push({
         url: `${baseUrl}/${region}/${districtSlug}`,
         lastModified: currentDate,
@@ -187,9 +187,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.9,
       });
 
-      // 5-2. 세부 동 단위 페이지 (기본 & 힐링)
+      // 5-2. 세부 동 단위 페이지
       dongs.forEach((dong) => {
         const encodedDong = encodeURIComponent(dong);
+
+        // 형식 A: 슬러그 경로 방식 (/region/district/동)
         dynamicRoutes.push({
           url: `${baseUrl}/${region}/${districtSlug}/${encodedDong}`,
           lastModified: currentDate,
@@ -198,6 +200,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
         });
         dynamicRoutes.push({
           url: `${baseUrl}/healing/${region}/${districtSlug}/${encodedDong}`,
+          lastModified: currentDate,
+          changeFrequency: 'daily',
+          priority: 0.85,
+        });
+
+        // 형식 B: 쿼리스트링 방식 (/region/district?dong=동)
+        dynamicRoutes.push({
+          url: `${baseUrl}/${region}/${districtSlug}?dong=${encodedDong}`,
+          lastModified: currentDate,
+          changeFrequency: 'daily',
+          priority: 0.85,
+        });
+        dynamicRoutes.push({
+          url: `${baseUrl}/healing/${region}/${districtSlug}?dong=${encodedDong}`,
           lastModified: currentDate,
           changeFrequency: 'daily',
           priority: 0.85,
